@@ -7,7 +7,6 @@ import {
 import { useAppSelector } from "./hooks/redux";
 import { selectIsLoading } from "./features/auth/slices/authSlice";
 import { ToastContainer } from "react-toastify";
-import { Analytics } from "@vercel/analytics/next";
 
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { RoleBasedRoute } from "./components/RoleBasedRoute";
@@ -53,7 +52,6 @@ function App() {
   return (
     <Router>
       <ToastContainer />
-      <Analytics />
       <Layout>
         <Routes>
           {/* Public routes */}
