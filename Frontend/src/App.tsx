@@ -1,28 +1,34 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { useAppSelector } from './hooks/redux';
-import { selectIsLoading } from './features/auth/slices/authSlice';
-import { ToastContainer } from 'react-toastify';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { useAppSelector } from "./hooks/redux";
+import { selectIsLoading } from "./features/auth/slices/authSlice";
+import { ToastContainer } from "react-toastify";
+import { Analytics } from "@vercel/analytics/next";
 
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { RoleBasedRoute } from "./components/RoleBasedRoute";
+import { AdminRedirectRoute } from "./components/AdminRedirectRoute";
 
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { RoleBasedRoute } from './components/RoleBasedRoute';
-import { AdminRedirectRoute } from './components/AdminRedirectRoute';
+import Navbar from "./common/components/Navbar";
+import Footer from "./common/components/Footer";
 
-import Navbar from './common/components/Navbar';
-import Footer from './common/components/Footer';
+import Dashboard from "./features/user-portal/dashboard/pages/Dashboard";
+import Contacts from "./features/user-portal/contacts/pages/Contacts";
+import Campaigns from "./features/user-portal/campaigns/pages/Campaigns";
+import MessageTemplates from "./features/user-portal/message-templates/pages/MessageTemplates";
+import Login from "./features/auth/pages/Login";
+import WorkspaceSelection from "./features/auth/pages/WorkspaceSelection";
 
-import Dashboard from './features/user-portal/dashboard/pages/Dashboard';
-import Contacts from './features/user-portal/contacts/pages/Contacts';
-import Campaigns from './features/user-portal/campaigns/pages/Campaigns';
-import MessageTemplates from './features/user-portal/message-templates/pages/MessageTemplates';
-import Login from './features/auth/pages/Login';
-import WorkspaceSelection from './features/auth/pages/WorkspaceSelection';
-
-import AdminDashboard from './features/admin-portal/dashboard/pages/AdminDashboard';
+import AdminDashboard from "./features/admin-portal/dashboard/pages/AdminDashboard";
 
 function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const isAuthRoute = location.pathname === '/login' || location.pathname === '/select-workspace';
+  const isAuthRoute =
+    location.pathname === "/login" || location.pathname === "/select-workspace";
 
   return (
     <div className="App">
@@ -46,92 +52,92 @@ function App() {
 
   return (
     <Router>
-      <ToastContainer/>
+      <ToastContainer />
+      <Analytics />
       <Layout>
         <Routes>
           {/* Public routes */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
               <ProtectedRoute requireAuth={false}>
                 <Login />
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/select-workspace" 
+
+          <Route
+            path="/select-workspace"
             element={
               <ProtectedRoute requireAuth={false}>
                 <WorkspaceSelection />
               </ProtectedRoute>
-            } 
+            }
           />
           {/* Admin portal */}
-            <Route 
-            path="/admin" 
+          <Route
+            path="/admin"
             element={
               <ProtectedRoute>
                 <RoleBasedRoute requiredRole="admin">
                   <AdminDashboard />
                 </RoleBasedRoute>
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* User Portal Routes*/}
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <ProtectedRoute>
                 <RoleBasedRoute requiredRole="viewer" adminAllowed={false}>
                   <Dashboard />
                 </RoleBasedRoute>
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/contacts" 
+
+          <Route
+            path="/contacts"
             element={
               <ProtectedRoute>
                 <RoleBasedRoute requiredRole="viewer" adminAllowed={false}>
                   <Contacts />
                 </RoleBasedRoute>
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/campaigns" 
+
+          <Route
+            path="/campaigns"
             element={
               <ProtectedRoute>
                 <RoleBasedRoute requiredRole="viewer" adminAllowed={false}>
                   <Campaigns />
                 </RoleBasedRoute>
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/message-templates" 
+
+          <Route
+            path="/message-templates"
             element={
               <ProtectedRoute>
                 <RoleBasedRoute requiredRole="viewer" adminAllowed={false}>
                   <MessageTemplates />
                 </RoleBasedRoute>
               </ProtectedRoute>
-            } 
+            }
           />
-          
-    
-          <Route 
-            path="*" 
+
+          <Route
+            path="*"
             element={
               <ProtectedRoute>
                 <AdminRedirectRoute />
               </ProtectedRoute>
-            } 
+            }
           />
         </Routes>
       </Layout>
